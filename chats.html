@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weebeio | You're friendly neighbourhood bot :)</title>
+    <link rel="shortcut icon" href="assets/weebeio.ico" type="image/x-icon">
+    <!-- Import Icons -->
+    <link rel="stylesheet" href="assets/icons/style.css">
+    <!-- Import custom CSS files -->
+    <link rel="stylesheet" href="stylesheet/animationv1.css">
+    <link rel="stylesheet" href="stylesheet/v1.css">
+    <script src="javascript/v1.js" defer></script>
+    <style>
+    </style>
+</head>
+
+<body class="chatScreen">
+    <section class="main-section">
+        <header class="header animFadeIn animDelay2 animDuration8">
+            <div class="pG">
+                <img src="assets/lineLogoW.svg" width="54px" height="54px" class="imgLogoWhite" alt="Logo">
+                <div class="group">
+                    <h2>Weebeio</h2>
+                    <p class="opa6 txtOverflow-1">Your friendly neighbourhood bot :)</p>
+                </div>
+            </div>
+            <button class="menu-button btnRounded" aria-label="Goto Settings" onclick="location.href='settings.html'">
+                <span class="icon-Menu"></span>
+            </button>
+        </header>
+        <main class="animFadeIn animDelay6 animDuration8" id="mainParent">
+            <div class="parentMessageArea">
+                <div class="messageArea addAnim" id="main">
+                </div>
+            </div>
+        </main>
+        <form class="sendMessageSection animFadeIn animDelay6 animDuration8" id="formMessage">
+            <input type="text" name="txtMessage" autocomplete="off" id="txtMessage" class="txtMessage"
+                placeholder="Type your message here..." onkeyup="checkValid(this)" maxlength="1024" tabindex="0">
+            <button class="btnRounded btnSend" id="btnSendMsg" type="submit" aria-label="Send Message">
+                <span class="icon-Send"></span>
+            </button>
+        </form>
+    </section>
+    <div id="popToast">
+        <p class="toast" id="popToastMsg">...</p>
+    </div>
+    <script>
+        const botName = "Weebeio";
+        let scrollToEnd = () => {
+            document.getElementById('mainParent').scrollBy(0, document.getElementById('mainParent').scrollHeight);
+            document.querySelector('body').scrollBy(0, document.querySelector('body').scrollHeight);
+        };
+
+        const loadingMessage = () => {
+            const newMessage = document.createElement("div");
+            newMessage.classList.add("messages");
+            newMessage.classList.add("bot");
+            newMessage.classList.add("lazy_load");
+            const lazyLoad = document.createElement("div");
+            lazyLoad.classList.add("lazy_loading");
+            lazyLoad.innerHTML = `<div class='dots'></div>
+                                <div class='dots'></div>
+                                <div class='dots'></div>`;
+
+            newMessage.appendChild(lazyLoad);
+
+            if (document.getElementById('main').children.length > 0) {
+                if (document.getElementById('main').lastElementChild.classList[1] == 'bot') {
+                    document.getElementById('main').lastElementChild.classList.remove("isLast");
+                }
+            }
+            newMessage.classList.add("isLast");
+
+            document.getElementById('main').appendChild(newMessage);
+            scrollToEnd();
+        }
+
+        const deleteLoading = () => {
+            document.querySelectorAll(".lazy_load").forEach(data => {
+                data.parentNode.removeChild(data);
+            });
+        }
+
+        const displayMessage = (chatFrom, elemValue) => {
+
+            const tdate = new Date();
+            const t_months = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
+            ]
+            var t_days = [
+                'Sun', 'Mon', 'Tues', 'Wed',
+                'Thu', 'Fri', 'Sat'
+            ];
+            const isEmoji =
+                /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
+
+            const newMessage = document.createElement("div");
+            newMessage.classList.add("messages");
+            newMessage.classList.add(chatFrom);
+
+            if (document.getElementById('main').children.length > 0) {
+                if (document.getElementById('main').lastElementChild.classList[1] == chatFrom) {
+                    document.getElementById('main').lastElementChild.classList.remove("isLast");
+                }
+            }
+            newMessage.classList.add("isLast");
+
+            const messageText = document.createElement("p");
+            const messageDate = document.createElement("small");
+
+            if (elemValue.length <= 4) {
+                if (isEmoji.test(elemValue)) messageText.classList.add("singleWord");
+            }
+
+            messageDate.classList.add("date");
+
+            // Message Added here
+            if (chatFrom == 'bot') {
+                let linkRegex = new RegExp('`' + "(.*)" + '`');
+                let checkLinks = elemValue.match(linkRegex);
+                let mainMessage = elemValue.replace(linkRegex, ' ');
+                messageText.innerText += mainMessage;
+                if (checkLinks != null) {
+                    let linkData = checkLinks[1].replace(/`/gi, '');
+                    linkData = linkData.split(' ');
+                    linkData.forEach(data => {
+                        messageText.append(document.createElement("br"));
+                        let linkHTML = document.createElement("a");
+                        linkHTML.href = data;
+                        linkHTML.target = "_blank";
+                        linkHTML.innerText += data;
+                        messageText.append(linkHTML);
+                    })
+                }
+
+            } else {
+                messageText.innerText = elemValue;
+            }
+
+
+            let fullTime = t_days[tdate.getDay()] + " ";
+            fullTime += tdate.getDate();
+            if (tdate.getDate() != 1 || tdate.getDate()() != 2 || tdate.getDate() != 3 || tdate.getDate() != 21 ||
+                tdate
+                .getDate() != 22 || tdate.getDate() != 23 || tdate.getDate() != 31) {
+                fullTime += "th";
+            } else {
+                if (tdate.getDate() == 1) {
+                    fullTime += "st";
+                } else if (tdate.getDate() == 2) {
+                    fullTime += "nd";
+                } else if (tdate.getDate() == 3) {
+                    fullTime += "rd";
+                } else if (tdate.getDate() == 21) {
+                    fullTime += "st";
+                } else if (tdate.getDate() == 22) {
+                    fullTime += "nd";
+                } else if (tdate.getDate() == 23) {
+                    fullTime += "rd";
+                } else if (tdate.getDate() == 31) {
+                    fullTime += "st";
+                }
+            }
+            fullTime += " " + t_months[tdate.getMonth()] + " ";
+            fullTime += tdate.getFullYear() + ", ";
+            fullTime += tdate.getHours() > 12 ? tdate.getHours() - 12 : tdate.getHours();
+            fullTime += ":";
+            fullTime += (tdate.getMinutes() < 10 ? ("0" + tdate.getMinutes()) : tdate.getMinutes()) + " ";
+            fullTime += tdate.getHours() > 12 ? "pm" : "am";
+            messageDate.innerText = fullTime;
+
+            newMessage.appendChild(messageText);
+            newMessage.appendChild(messageDate);
+
+            document.getElementById('main').appendChild(newMessage);
+        }
+
+        const fetchData = async (url_req, url_dataSend) => {
+            try {
+                let res = await fetch(url_req, url_dataSend);
+                if (res.status === 200) {
+                    return await res.json();
+                }
+                let errorMessage = JSON.stringify({
+                    message: "(-_-;) I told my developer to fix this part but that lazy dumb f'er didn't even look at this situation."
+                });
+                return JSON.parse(errorMessage);
+            } catch (error) {
+                console.error("Server Error(Code) : " + error);
+                let errorMessage = JSON.stringify({
+                    message: "(~_~;) Dumb server just turned off itself. I hope you try again after some time.."
+                });
+                return JSON.parse(errorMessage);
+            }
+        }
+
+        const getBotReply = async (userMessage, postFunc = () => {}) => {
+            loadingMessage();
+            let getDataR = await fetchData('http://192.168.29.86:5000/api/response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    newMessage: userMessage
+                })
+            });
+            if (getDataR == undefined) {
+                deleteLoading();
+                //TODO: Add server error message.
+                return;
+            }
+            if (getDataR.message === "drb_cant") {
+                getDataR =
+                    `(˘･︿･˘) 
+                    I am still incapable to understand what you said. But our grand daddy can help you : \`https://www.google.com/search?q=${userMessage.replace(/[ ]/gi, "+")}\`
+                    `;
+            } else {
+                getDataR = getDataR.message;
+            }
+            setTimeout(() => {
+                displayMessage("bot", getDataR);
+                postFunc();
+                deleteLoading();
+                scrollToEnd();
+            }, 40 * getDataR.length)
+        }
+
+        const getGreetingsTime = () => {
+            let currentTime = new Date().getHours();
+            let retVal = "";
+            if (currentTime == 3) {
+                retVal =
+                    "(o_-) Hey you sure you aren't a ghost? \n\n(´･_･`)\nAsk me question so that i can figure out if you need my help...";
+            } else if (currentTime == 0) {
+                retVal = "¯\\(-_-)/¯ Get a sleep dumb f \n\nWhy the heck are you here at this point of time ?";
+            } else if (currentTime < 12 && currentTime >= 04) {
+                retVal = "\\(^‿^)/ Good morning! I am " + botName +
+                    ", your friendly neighbourhood bot.\n\nHow would you like me to help you?";
+            } else if (currentTime >= 12 && currentTime < 15) {
+                retVal = "( ͡◐ ω ͡◐) \nGood Afternoon! What can i do for you?";
+            } else if (currentTime >= 15 && currentTime < 20) {
+                retVal = "Heyaa, good evening! \n＼(^o^)／\nHow would you like me to help  you ?";
+            } else if (currentTime >= 20 && currentTime < 22) {
+                retVal = "Didn't sleep yet? What brings you here?";
+            } else if (currentTime > 22 || currentTime < 04) {
+                retVal = "¯\\_(-_-)_/¯ Can't you get a sleep???\n\nAnyways what is it that brought you here to me?";
+            } else {
+                retVal = "Welcome!";
+            }
+            return retVal;
+        };
+
+        const popToast = (cusMsg, duration, mode = "normal") => {
+            toast = document.getElementById("popToastMsg");
+            if (!toast) {
+                const popToastElement = document.createElement("div");
+                popToastElement.id = "popToast";
+                const popToastText = document.createElement("p");
+                popToastText.classList.add("toast");
+                popToastText.id = "popToastMsg";
+                popToastElement.appendChild(popToastText);
+                document.body.appendChild(popToastElement);
+                popToast(cusMsg, duration, mode);
+            } else {
+                toast.classList.add(mode);
+                toast.innerText = cusMsg;
+                toast.classList.add("show");
+                setTimeout(() => {
+                    toast.classList.remove("show")
+                }, 800 + duration)
+            }
+
+
+        };
+
+        let formBusy = false;
+        document.getElementById("formMessage").addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!formBusy) {
+                const userInput = document.getElementById('txtMessage').value;
+
+                if (userInput.length > 0) {
+                    displayMessage("user", userInput);
+                    formBusy = true;
+                    scrollToEnd();
+
+                    setTimeout(() => {
+                        getBotReply(userInput, () => {
+                            formBusy = false;
+                        });
+                    }, 200 + (100 * userInput.length));
+
+                    document.getElementById('txtMessage').value = '';
+                    document.getElementById('txtMessage').focus();
+                } else {
+                    document.getElementById('txtMessage').focus();
+                }
+            } else {
+                document.getElementById('txtMessage').focus();
+                scrollToEnd();
+                popToast("Please wait for the bot to reply...", 2000);
+            }
+        })
+
+        document.body.onload = () => {
+            document.getElementById('txtMessage').focus();
+            loadingMessage();
+            setTimeout(() => {
+                deleteLoading();
+                displayMessage("bot", getGreetingsTime());
+                scrollToEnd();
+            }, 2000);
+        };
+    </script>
+</body>
+
+</html>
