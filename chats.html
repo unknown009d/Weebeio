@@ -54,6 +54,8 @@
             document.getElementById('mainParent').scrollBy(0, document.getElementById('mainParent').scrollHeight);
             document.querySelector('body').scrollBy(0, document.querySelector('body').scrollHeight);
         };
+        //LocalStorage variables
+        let askingName = false;
 
         const loadingMessage = () => {
             const newMessage = document.createElement("div");
@@ -182,13 +184,13 @@
 
         const fetchData = async (url_req, url_dataSend) => {
             try {
+                let errorMessage = JSON.stringify({
+                    message: "(-_-;) I told my developer to fix this part but that lazy dumb f'er didn't even look at this situation."
+                });
                 let res = await fetch(url_req, url_dataSend);
                 if (res.status === 200) {
                     return await res.json();
                 }
-                let errorMessage = JSON.stringify({
-                    message: "(-_-;) I told my developer to fix this part but that lazy dumb f'er didn't even look at this situation."
-                });
                 return JSON.parse(errorMessage);
             } catch (error) {
                 console.error("Server Error(Code) : " + error);
@@ -238,22 +240,22 @@
             let retVal = "";
             if (currentTime == 3) {
                 retVal =
-                    "(o_-) Hey you sure you aren't a ghost? \n\n(´･_･`)\nAsk me question so that i can figure out if you need my help...";
+                    "(o_-) Hey " + localStorage.getItem("username") + " you sure you aren't a ghost? \n\n(´･_･`)\nAsk me question so that i can figure out if you need my help...";
             } else if (currentTime == 0) {
-                retVal = "¯\\(-_-)/¯ Get a sleep dumb f \n\nWhy the heck are you here at this point of time ?";
+                retVal = "¯\\(-_-)/¯ Get a sleep dumb f \n\n " + localStorage.getItem("username") + ", why the heck are you here at this point of time ?";
             } else if (currentTime < 12 && currentTime >= 04) {
-                retVal = "\\(^‿^)/ Good morning! I am " + botName +
-                    ", your friendly neighbourhood bot.\n\nHow would you like me to help you?";
+                retVal = "\\(^‿^)/ Good morning "+ localStorage.getItem("username") +"\n\n Welcome back to your friendly neighbourhood bot.\n\nHow would you like me to help you?";
             } else if (currentTime >= 12 && currentTime < 15) {
-                retVal = "( ͡◐ ω ͡◐) \nGood Afternoon! What can i do for you?";
+                retVal = "( ͡◐ ω ͡◐) \nGood Afternoon "+ localStorage.getItem("username") +", What can i do for you?";
             } else if (currentTime >= 15 && currentTime < 20) {
-                retVal = "Heyaa, good evening! \n＼(^o^)／\nHow would you like me to help  you ?";
+                retVal = "Good evening "+ localStorage.getItem("username") +"! \n＼(^o^)／\nHow would you like me to help  you ?";
             } else if (currentTime >= 20 && currentTime < 22) {
-                retVal = "Good evening, more like goodnight... ¯\\_(ಠ_ಠ)_/¯\n\nNevermind, what is it that brings you here right now?";
+                retVal =
+                    "Good evening, more like goodnight.. \n"+ localStorage.getItem("username") +" don't you think you should get a sleep now? ¯\\_(ಠ_ಠ)_/¯\n\nNevermind, what is it that brings you here right now?";
             } else if (currentTime >= 22 || currentTime < 04) {
-                retVal = "¯\\_(-_-)_/¯ Can't you get a sleep???\n\nAnyways what is it that brought you here to me?";
+                retVal = "¯\\_(-_-)_/¯ "+ localStorage.getItem("username") +" can't you seriously get a sleep???\n\nAnyways what is it that brought you here to me?";
             } else {
-                retVal = "Welcome!";
+                retVal = "Welcome back "+ localStorage.getItem("username");
             }
             return retVal;
         };
@@ -292,11 +294,30 @@
                     formBusy = true;
                     scrollToEnd();
 
-                    setTimeout(() => {
-                        getBotReply(userInput, () => {
-                            formBusy = false;
-                        });
-                    }, 200 + (100 * userInput.length));
+                    // Below code is used for taking username and store it locally
+                    if (askingName) {
+                        localStorage.setItem("username", userInput);
+                        if (localStorage.getItem("username")) {
+                            setTimeout(() => {
+                                loadingMessage();
+                                setTimeout(() => {
+                                    deleteLoading();
+                                    displayMessage("bot", "So your name is " + localStorage
+                                        .getItem(
+                                            "username") +
+                                        ". ( ◜‿◝ )♡ That's a good name you got..");
+
+                                }, 1000)
+                            }, 500);
+                        }
+                        askingName = false;
+                    } else {
+                        setTimeout(() => {
+                            getBotReply(userInput, () => {
+                                formBusy = false;
+                            });
+                        }, 200 + (100 * userInput.length));
+                    }
 
                     document.getElementById('txtMessage').value = '';
                     document.getElementById('txtMessage').focus();
@@ -315,9 +336,15 @@
             loadingMessage();
             setTimeout(() => {
                 deleteLoading();
-                displayMessage("bot", getGreetingsTime());
+                if (!localStorage.getItem("username")) {
+                    displayMessage("bot",
+                        `◝\\(⁰▿⁰)/◜\nHeyyaa, I am ${botName}, your friendly neighbourhood bot.. \n\nWhat would you like me to call you with?`);
+                    askingName = true;
+                } else {
+                    displayMessage("bot", getGreetingsTime());
+                }
                 scrollToEnd();
-            }, 2000);
+            }, 1000);
         };
     </script>
 </body>

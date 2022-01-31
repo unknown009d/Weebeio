@@ -65,10 +65,12 @@ html {
   --blur: 4px;
   --selection-color-before: #ffffff00;
   --selection-color: #ffffff17;
+  --btnRply_bg: #e2e2e240;
+  --btnRply_text: #303030;
   --max-screen-width: 412px;
   --chat-border-radius: 15pt;
   --chat-bg-rounded: 30pt;
-  --chat-desktop-rounded: 20pt;
+  --chat-desktop-rounded: 25pt;
   --btnSendRounded: 40pt;
   --emoji-size: 2.5rem;
 }
@@ -98,6 +100,8 @@ html {
     --blur: 4px;
     --selection-color-before: #ffffff00;
     --selection-color: #ffffff10;
+    --btnRply_bg: #00000040;
+    --btnRply_text: #f1f1f1;
   }
 }
 
@@ -125,6 +129,8 @@ html {
   --blur: 4px;
   --selection-color-before: #ffffff00;
   --selection-color: #ffffff17;
+  --btnRply_bg: #e2e2e2ee;
+  --btnRply_text: #303030;
 }
 
 .dark {
@@ -151,6 +157,8 @@ html {
   --blur: 4px;
   --selection-color-before: #ffffff00;
   --selection-color: #ffffff10;
+  --btnRply_bg: #00000040;
+  --btnRply_text: #f1f1f1;
 }
 
 body {
@@ -613,6 +621,28 @@ body {
   transition: 0s;
 }
 
+.chatScreen .main-section .sendMessageSection .btnReply {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  background-color: var(--btnRply_bg);
+  color: var(--btnRply_text);
+  opacity: 0.6;
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--chat-border-radius);
+  font-weight: 700;
+  width: 100%;
+  overflow: hidden;
+  margin-right: 0.5rem;
+}
+
+.chatScreen .main-section .sendMessageSection .btnReply:active {
+  -webkit-transform: scale(0.94);
+          transform: scale(0.94);
+  -webkit-transition: 0s;
+  transition: 0s;
+}
+
 .chatScreen .main-section .sendMessageSection .txtMessage {
   all: unset;
   margin: 0 0.8rem;
@@ -863,6 +893,11 @@ body {
 #popToast .toast.normal {
   background-color: var(--toast-bg-color);
   color: var(--toast-text-color);
+}
+
+#popToast .toast.success {
+  background-color: #23a053e3;
+  color: #ffffff;
 }
 
 #popToast .toast.warn {
