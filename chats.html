@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Weebeio | You're friendly neighbourhood bot :)</title>
     <link rel="shortcut icon" href="assets/weebeio.ico" type="image/x-icon">
     <!-- Import Icons -->
@@ -309,13 +309,15 @@
                                 loadingMessage();
                                 setTimeout(() => {
                                     deleteLoading();
-                                    displayMessage("bot", "( ◜‿◝ )♡\nSo your name is " + 
-                                    localStorage.getItem("username") + ". That's a good name you got..");
+                                    displayMessage("bot", "( ◜‿◝ )♡\nSo your name is " +
+                                        localStorage.getItem("username") +
+                                        ". That's a good name you got..");
                                     setTimeout(() => {
                                         loadingMessage();
                                         setTimeout(() => {
                                             deleteLoading();
-                                            displayMessage("bot", getGreetingsTime());
+                                            displayMessage("bot",
+                                                getGreetingsTime());
                                             scrollToEnd();
                                         }, 200 + (40 * getGreetingsTime()
                                             .length));
