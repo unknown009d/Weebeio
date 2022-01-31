@@ -218,7 +218,9 @@
             if (getDataR.message === "drb_cant") {
                 getDataR =
                     `(˘･︿･˘) 
-                    I am still incapable to understand what you said. But our grand daddy can help you : \`https://www.google.com/search?q=${userMessage.replace(/[ ]/gi, "+")}\`
+                    Sorry for the inconvinience but my developer is still incapable to make me understand this current situation. 
+                    
+                    Anyways I am here with some results from DuckDuckGo : \`https://duckduckgo.com/?q=${userMessage.replace(/[ ]/gi, "+")}\`
                     `;
             } else {
                 getDataR = getDataR.message;
@@ -247,8 +249,8 @@
             } else if (currentTime >= 15 && currentTime < 20) {
                 retVal = "Heyaa, good evening! \n＼(^o^)／\nHow would you like me to help  you ?";
             } else if (currentTime >= 20 && currentTime < 22) {
-                retVal = "Didn't sleep yet? What brings you here?";
-            } else if (currentTime > 22 || currentTime < 04) {
+                retVal = "Good evening, more like goodnight... ¯\\_(ಠ_ಠ)_/¯\n\nNevermind, what is it that brings you here right now?";
+            } else if (currentTime >= 22 || currentTime < 04) {
                 retVal = "¯\\_(-_-)_/¯ Can't you get a sleep???\n\nAnyways what is it that brought you here to me?";
             } else {
                 retVal = "Welcome!";
