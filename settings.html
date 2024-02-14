@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="stylesheet/animationv1.css">
     <link rel="stylesheet" href="stylesheet/v1.css">
     <script src="javascript/v1.js" defer></script>
+    <style></style>
 </head>
 
 <body class="settings">
@@ -25,13 +26,13 @@
             </div>
         </header>
         <div class="cont animFadeIn animDelay4 animDuration6">
-            <div class="options">
+            <button class="options" onclick="location.href='colorScheme.html'">
                 <span class="icon-Aperture mr1"></span>
                 <div class="textGroup">
                     <p>Color Scheme</p>
                     <small class="txtOverflow-1">Change the Accent color of this application</small>
                 </div>
-            </div>
+            </button>
             <div class="options">
                 <span class="icon-Night mr1"></span>
                 <div class="textGroup">
@@ -48,7 +49,7 @@
             </div>
             <div class="options">
                 <span class="icon-Delete mr1"></span>
-                <div class="textGroup">
+                <div class="textGroup" onclick="deleteData();">
                     <p>Remove Data</p>
                     <small class="txtOverflow-1">Delete all your personal data with this bot</small>
                 </div>
@@ -60,7 +61,7 @@
                     <small class="txtOverflow-1">Detailed description of this application</small>
                 </div>
             </div>
-            <div class="options">
+            <div class="options" onclick="location.href='saveData.html'">
                 <span class="icon-Developement mr1"></span>
                 <div class="textGroup">
                     <p>Development</p>
@@ -68,11 +69,15 @@
                 </div>
             </div>
         </div>
-        <button href="#" onclick="location.href='chats.html'" class="goBackChat btnClick animFadeIn animDelay7 animDuration6">
+        <button href="#" onclick="location.href='chats.html'"
+            class="goBackChat btnClick animFadeIn animDelay7 animDuration6">
             <span class="icon-Right"></span>
             <p>Go back to chat</p>
         </button>
     </section>
+    <div id="popToast">
+        <p class="toast" id="popToastMsg">...</p>
+    </div>
 </body>
 
 </html>

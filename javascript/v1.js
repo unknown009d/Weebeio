@@ -1,21 +1,56 @@
+const popToast = (cusMsg, duration, mode = "normal") => {
+    toast = document.getElementById("popToastMsg");
+    if (!toast) {
+        const popToastElement = document.createElement("div");
+        popToastElement.id = "popToast";
+        const popToastText = document.createElement("p");
+        popToastText.classList.add("toast");
+        popToastText.id = "popToastMsg";
+        popToastElement.appendChild(popToastText);
+        document.body.appendChild(popToastElement);
+        popToast(cusMsg, duration, mode);
+    } else {
+        toast.classList.add(mode);
+        toast.innerText = cusMsg;
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+            toast.classList.remove(mode);
+        }, 800 + duration)
+    }
+
+
+};
 let root = document.querySelector(':root');
 let _getRootValue = (rName) => {
     let rootStyle = getComputedStyle(root);
     return rootStyle.getPropertyValue(rName);
 };
+
 let _setRootValue = (rName, rValue) => {
     root.style.setProperty(rName, rValue);
 };
+// const serverUrl = 'http://192.168.29.86:5000';
+const serverUrl = 'http://127.0.0.1:5000';
+// const serverUrl = 'http://192.168.43.234:5000';
 
+const deleteData = () => {
+    localStorage.clear();
+    popToast("Your data has been deleted", 2000, "success");
+};
 
-let changeAccentColor = (elemVal) => {
+let changeAccentColor = (elemVal, everytime = false, elementStyle = "html") => {
     dStyle = document.head.querySelector('style');
     dStyle.innerHTML =
         `
-        html{
+        ${elementStyle}{
             filter: hue-rotate(${elemVal}deg);
         }
     `;
+    if (everytime == true) {
+        // console.log()
+        localStorage.setItem("accentColor", elemVal)
+    }
 };
 
 let changeRoundedCorners = (elemVal) => {
@@ -27,13 +62,13 @@ let changeRoundedCorners = (elemVal) => {
 };
 
 let checkValid = (elem) => {
-    elem.value = elem.value.replace(/[<>`=|]/g, "");
+    elem.value = elem.value.replace(/[<>:`=|]/g, "");
 };
 
-/* ChatScreen Maximum */
+/* ChatScreen page Maximum */
 const botName = "Weebeio";
 
-//LocalStorage variables
+// LocalStorage variables
 let askingName = false;
 let formBusy = false;
 
@@ -72,6 +107,9 @@ const deleteLoading = () => {
     });
 }
 
+const isEmoji =
+    /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
+
 const displayMessage = (chatFrom, elemValue) => {
 
     const tdate = new Date();
@@ -83,8 +121,6 @@ const displayMessage = (chatFrom, elemValue) => {
         'Sun', 'Mon', 'Tues', 'Wed',
         'Thu', 'Fri', 'Sat'
     ];
-    const isEmoji =
-        /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
 
     const newMessage = document.createElement("div");
     newMessage.classList.add("messages");
@@ -187,8 +223,12 @@ const fetchData = async (url_req, url_dataSend) => {
 }
 
 const getBotReply = async (userMessage, postFunc = () => {}) => {
+    if (userMessage.match(isEmoji)) {
+        postFunc();
+        return;
+    }
     loadingMessage();
-    let getDataR = await fetchData('http://192.168.29.86:5000/api/response', {
+    let getDataR = await fetchData(serverUrl + '/api/response', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -199,16 +239,31 @@ const getBotReply = async (userMessage, postFunc = () => {}) => {
     });
     if (getDataR == undefined) {
         deleteLoading();
-        //TODO: Add server error message.
+        popToast("The server is offline at this moment..", 1000);
         return;
     }
     if (getDataR.message === "drb_cant") {
-        getDataR =
-            `(˘･︿･˘) 
+        let spellCheck = await fetchData(serverUrl + '/api/wrongWords', {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                sentence: userMessage
+            })
+        });
+        if (spellCheck.message == false) {
+            getDataR =
+                `「(°ヘ°) 
+                Hey ${localStorage.getItem("username")}, i think you have made a typographical error.`;
+        } else {
+            getDataR =
+                `(˘･︿･˘) 
             Sorry for the inconvinience but my developer is still incapable to make me understand this current situation. 
             
-            Anyways I am here with some results from DuckDuckGo : \`https://duckduckgo.com/?q=${userMessage.replace(/[ ]/gi, "+")}\`
+            Anyways I am here with some results from Google : \`https://google.com/search?q=${userMessage.replace(/[ ]/gi, "+")}\`
             `;
+        }
     } else {
         getDataR = getDataR.message;
     }
@@ -228,6 +283,7 @@ const getGreetingsTime = () => {
             "(o_-) Hey " + localStorage.getItem("username") +
             " you sure you aren't a ghost? \n\n(´･_･`)\nAsk me question so that i can figure out if you need my help...";
     } else if (currentTime == 0) {
+        // TODO: Remove this before production.
         retVal = "¯\\(-_-)/¯ Get a sleep dumb f \n\n " + localStorage.getItem("username") +
             ", why the heck are you here at this point of time ?";
     } else if (currentTime < 12 && currentTime >= 04) {
@@ -250,29 +306,6 @@ const getGreetingsTime = () => {
         retVal = "Welcome back " + localStorage.getItem("username");
     }
     return retVal;
-};
-
-const popToast = (cusMsg, duration, mode = "normal") => {
-    toast = document.getElementById("popToastMsg");
-    if (!toast) {
-        const popToastElement = document.createElement("div");
-        popToastElement.id = "popToast";
-        const popToastText = document.createElement("p");
-        popToastText.classList.add("toast");
-        popToastText.id = "popToastMsg";
-        popToastElement.appendChild(popToastText);
-        document.body.appendChild(popToastElement);
-        popToast(cusMsg, duration, mode);
-    } else {
-        toast.classList.add(mode);
-        toast.innerText = cusMsg;
-        toast.classList.add("show");
-        setTimeout(() => {
-            toast.classList.remove("show")
-        }, 800 + duration)
-    }
-
-
 };
 
 if (document.getElementById("formMessage")) {
@@ -348,10 +381,123 @@ const chat_mainPage = () => {
     }, 1000);
 };
 
+const trainBot = async (txtDataRAW, selfBtn) => {
+    txtData = document.getElementById(txtDataRAW).value;
+    if (txtData.length <= 0) {
+        popToast("Please write something...", 2000, "warn");
+        document.getElementById(txtDataRAW).focus();
+        return;
+    }
+    if (txtData.split(",").length <= 1) {
+        popToast("Please write atleast 2 messages...", 2000, "warn");
+        return;
+    }
+
+    const checkSecurity = prompt("Enter security code for saving data : ");
+    if(checkSecurity == null || checkSecurity == undefined || checkSecurity == "" || checkSecurity.length <= 0){
+        alert("Please write security code for traning with your data...");
+        return;
+    }
+    
+    // Lazy Loading starts here ...
+    selfBtn.classList.add("loadingWait");
+    const btnInitialText = selfBtn.innerHTML;
+    selfBtn.innerHTML = `
+        <div class="ldDots">
+            <div class="dts"></div>
+            <div class="dts"></div>
+            <div class="dts"></div>
+        </div>
+    `; 
+
+    const securityCode = await fetchData(serverUrl + '/api/securityCode', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            secCode: checkSecurity
+        })
+    });
+    if (securityCode == undefined) {
+        popToast("The server is offline at this moment..", 1000);
+        selfBtn.classList.remove("loadingWait");
+        selfBtn.innerHTML = btnInitialText;
+        return;
+    }
+
+    if (securityCode.message == true) {
+        // Code runs to save data after validity checks
+
+        newDataTrain = [];
+    
+        txtData.split(",").forEach(data => {
+            if (data != "" && data != undefined && data.length > 0) {
+                if (data.trim() != "") {
+                    newDataTrain.push(data.trim());
+                }
+            }
+        });
+    
+        let getDataR = await fetchData(serverUrl + '/api/trainBot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                conversation: newDataTrain
+            })
+        });
+        if (getDataR == undefined) {
+            popToast("The server is offline at this moment..", 1000);
+            selfBtn.classList.remove("loadingWait");
+            selfBtn.innerHTML = btnInitialText;
+            return;
+        }
+    
+        if (getDataR.message == true) {
+            popToast("Training Successfully Completed...", 2000, "success");
+            document.getElementById(txtDataRAW).value = "";
+        } else if (getDataR.message == false) {
+            popToast("There was a problem in the server...", 2000, "danger");
+            console.error("Error : " + getDataR.message);
+        } else {
+            popToast(getDataR.message, 2000, "danger");
+        }
+        selfBtn.classList.remove("loadingWait");
+        selfBtn.innerHTML = btnInitialText;
+
+    } else if (securityCode.message == false) {
+        popToast("Security Code not valid...", 2000, "danger");
+        console.error("Error : " + securityCode.message);
+        selfBtn.classList.remove("loadingWait");
+        selfBtn.innerHTML = btnInitialText;
+        return;
+    } else {
+        popToast("The server is offline at this moment..", 2000, "danger");
+        console.error("Error : " + securityCode.message);
+        selfBtn.classList.remove("loadingWait");
+        selfBtn.innerHTML = btnInitialText;
+        return;
+    }
+
+    selfBtn.classList.remove("loadingWait");
+    selfBtn.innerHTML = btnInitialText;
+};
 
 window.addEventListener('load', (e) => {
     if (document.getElementById("chatScreen")) {
         chat_mainPage();
+    }
+
+    if (!localStorage.getItem("accentColor")) {
+        localStorage.setItem("accentColor", 0)
+    }
+
+    changeAccentColor(localStorage.getItem("accentColor"));
+
+    if (document.getElementById("colorScheme")) {
+        document.getElementById("colorSlider").value = localStorage.getItem("accentColor");
     }
 
 });
