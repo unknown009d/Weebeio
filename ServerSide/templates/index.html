@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weebieo</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='css/all.css') }}"
+    />
+  </head>
+
+  <body class="">
+    <!-- 
+      ADD 'BLUR' class to activte blur effect 
+      ADD 'noBLUR' class to deactivte blur effect 
+    -->
+    <div class="cb d-center" id="weebeio-cb">
+      <div class="container">
+        <!-- chat box -->
+        <div class="chat-box" id="wb-chatBox">
+          <!-- client -->
+          <div class="client">
+            <img
+              src="{{ url_for('static',filename='weebeio.ico') }}"
+              alt="logo"
+            />
+            <div class="client-info">
+              <h2>Weebieo</h2>
+              <p style="color: #ffffff9e">Your personal assistant bot...</p>
+            </div>
+          </div>
+
+          <!-- main chat section -->
+          <div class="chats" id="mcts">
+            <div class="cli my-chat">Hi...</div>
+            <div class="cli client-chat">
+              Hello, i am Weebieo how can i help you?
+            </div>
+          </div>
+
+          <!-- input field section -->
+          <div class="chat-input">
+            <input
+              type="text"
+              placeholder="Type your message here..."
+              id="txtMessageU"
+            />
+            <button
+              class="send-btn"
+              id="s-btn"
+              onclick="getResponseFromBot('txtMessageU')"
+            >
+              <img
+                src="{{ url_for('static',filename='send.png') }}"
+                alt="send-btn"
+              />
+            </button>
+          </div>
+        </div>
+        <!-- button -->
+        <div class="chat-btn" id="openWeebieo">
+          <img
+            src="{{ url_for('static',filename='weebeio.ico') }}"
+            alt="chat box icon btn"
+          />
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const chatbotMainScreen = document.getElementById("wb-chatBox");
+      const openChatBtn = document.getElementById("openWeebieo");
+      openChatBtn.addEventListener("click", () => {
+        chatbotMainScreen.classList.toggle("openChatBox");
+      });
+      function scrollToBottomChat() {
+        const ditem = document.getElementById("mcts");
+        ditem.scrollTo(0, ditem.scrollHeight);
+      }
+      scrollToBottomChat();
+
+      document.getElementById("s-btn").addEventListener("click", () => {
+        scrollToBottomChat();
+      });
+
+    </script>
+  </body>
+</html>

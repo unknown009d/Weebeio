@@ -1,0 +1,274 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Nunito", "Poppins", "Raleway", sans-serif;
+  outline: none;
+  border: none;
+}
+
+body {
+  height: 100vh;
+  background: url("wall.jpg") center/cover no-repeat;
+}
+
+.cb {
+  position: fixed;
+  bottom: 120px;
+  padding: 0 1.5rem;
+}
+
+.cb.d-left {
+  left: 0;
+}
+.cb.d-center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+.cb.d-right {
+  right: 0;
+}
+
+.cb.d-center .chat-btn {
+  bottom: -20%;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* chat box section */
+
+.chat-box {
+  width: fit-content;
+  max-width: 450px;
+  height: 120px;
+  background-color: #2e2e2e;
+  overflow: hidden;
+  border-radius: 10px;
+  position: relative;
+  border-radius: 20px;
+  box-shadow: 0px 10px 80px -5px #00000096, 0 0 0 5pt #25252582;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 400ms ease, height 500ms ease-out;
+}
+
+.openChatBox {
+  height: 500px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: initial;
+  user-select: initial;
+}
+.openChatBox + #openWeebieo img {
+  transform: scale(1.19) rotate(0deg);
+}
+
+.BLUR .chat-box {
+  background-color: #00000072;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.noBLUR .chat-box {
+  background-color: #2e2e2e;
+}
+.noBLUR .client {
+  background-color: #33ffe659;
+}
+
+/* about client */
+
+.client {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  height: 80px;
+  background-color: #33ffe61c;
+  padding: 15px;
+}
+
+.client img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.client-info {
+  color: #fff;
+  padding: 15px;
+}
+
+.client-info p {
+  color: #008000;
+  font-weight: bold;
+  font-size: 0.8em;
+}
+
+/* chat section */
+.chats {
+  width: 100%;
+  height: 72%;
+  padding: 0 15px;
+  padding-top: 0.5rem;
+  color: #fff;
+  position: relative;
+  font-size: 0.9em;
+  overflow: none;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.chats::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  border-radius: 100pt;
+  cursor: pointer;
+}
+.chats::-webkit-scrollbar-track {
+  background-color: transparent;
+  opacity: 0;
+}
+
+.chats::-webkit-scrollbar-thumb {
+  background-color: #b9fff600;
+  border-radius: 100pt;
+  cursor: pointer;
+}
+*:hover::-webkit-scrollbar-thumb,
+*:focus-visible::-webkit-scrollbar-thumb,
+*:focus-within::-webkit-scrollbar-thumb {
+  background-color: #b9fff61a;
+  cursor: pointer;
+}
+.client-chat {
+  word-wrap: break-word;
+  background-color: #35cab67d;
+  padding: 7px 10px;
+  border-radius: 10px 10px 10px 0;
+  margin: 10px 0;
+}
+
+.my-chat {
+  word-wrap: break-word;
+  background-color: #ffffff22;
+  padding: 7px 10px;
+  border-radius: 10px 10px 0 10px;
+  margin: 5px 0 5px auto;
+}
+
+/* input section */
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.289);
+  padding: 10px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+}
+
+.chat-input input {
+  width: calc(100% - 40px);
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.289);
+  border-radius: 50px;
+  color: rgb(226, 243, 243);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0 15px;
+}
+
+.send-btn {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  overflow: hidden;
+  position: relative;
+  margin-left: 5px;
+  cursor: pointer;
+  transition: 0.4s ease-in-out;
+  opacity: 0.8;
+  transition: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.send-btn:active {
+  transform: scale(0.85);
+}
+
+.send-btn img {
+  width: 100%;
+  height: 100%;
+}
+
+/* chat box button section */
+
+.chat-btn {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  cursor: pointer;
+  overflow: hidden;
+  position: fixed;
+  bottom: 20px;
+  box-shadow: 0 10px 20px -5px #0000003a;
+}
+
+.chat-btn img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 5px;
+  transform: rotate(20deg);
+  transition: 0.4s ease-in-out;
+}
+
+.chat-btn:hover img {
+  transform: scale(1.19) rotate(0deg);
+}
+.chat-icon {
+  position: fixed;
+  left: auto;
+  right: auto;
+  bottom: 0;
+  color: #fff;
+  font-size: 80px;
+  cursor: pointer;
+  z-index: 1000;
+}
+i {
+  font-size: 530%;
+}
+button.cancel {
+  background-color: #a13838;
+  border-radius: 25px;
+}
+.chats div {
+  font-weight: 600;
+}
+
+.cli {
+  min-width: 20%;
+  width: fit-content;
+  max-width: 80%;
+  font-size: 1rem;
+}
+@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+  .chat-box {
+    background-color: #00000072;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+}
