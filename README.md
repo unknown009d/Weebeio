@@ -45,6 +45,7 @@ SQLAlchemy>=1.4
 1. Create & activate a Python virtual environment:
 
 ```bash
+cd ServerSide
 python -m venv venv
 source venv/bin/activate   # Linux / macOS
 venv\Scripts\activate     # Windows
@@ -61,7 +62,7 @@ pip install -r requirements.txt
 4. Run the Flask server (example):
 
 ```bash
-export FLASK_APP=app.py
+export FLASK_APP=chat.py
 export FLASK_ENV=development
 flask run --host=0.0.0.0 --port=5000
 ```
