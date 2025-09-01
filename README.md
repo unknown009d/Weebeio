@@ -19,7 +19,7 @@ The bot runs with a `sqlite` database using `chatterbot.storage.SQLStorageAdapte
 
 ## Dependencies
 
-Minimum dependencies used in your code:
+Minimum dependencies used in code:
 
 * Python 3.8+ (recommended)
 * Flask
