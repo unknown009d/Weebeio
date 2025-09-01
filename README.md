@@ -47,8 +47,8 @@ SQLAlchemy>=1.4
 ```bash
 cd ServerSide
 python -m venv venv
-source venv/bin/activate   # Linux / macOS
-venv\Scripts\activate     # Windows
+source Weebeio/bin/activate   # Linux / macOS
+Weebeio\Scripts\activate     # Windows
 ```
 
 2. Install requirements:
